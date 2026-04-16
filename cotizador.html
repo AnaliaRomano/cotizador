@@ -293,6 +293,29 @@ body { font-family: "Segoe UI", Arial, sans-serif; background: var(--bg); color:
 
 ::-webkit-scrollbar { width: 5px; }
 
+/* ── HIDE PRICES MODE ── */
+/* When body has class hide-prices, collapse the Cant. and Valor columns in screen */
+body.hide-prices .q-thead { grid-template-columns: 68px 1fr 36px; }
+body.hide-prices .q-row  { grid-template-columns: 68px 1fr 36px; }
+body.hide-prices .s-row  { grid-template-columns: 68px 1fr 36px; }
+body.hide-prices .r-qty,
+body.hide-prices .r-price,
+body.hide-prices .q-thead .th-qty,
+body.hide-prices .q-thead .th-r { display: none; }
+
+/* Same for print when hide-prices is active */
+@media print {
+  body.hide-prices .q-thead { grid-template-columns: 68px 1fr 36px !important; }
+  body.hide-prices .q-row  { grid-template-columns: 68px 1fr 36px !important; }
+  body.hide-prices .s-row  { grid-template-columns: 68px 1fr 36px !important; }
+  body.hide-prices .r-qty,
+  body.hide-prices .r-price,
+  body.hide-prices .q-thead .th-qty,
+  body.hide-prices .q-thead .th-r { display: none !important; }
+  /* Also hide totals block when no prices shown */
+  body.hide-prices .q-total .qt-nums { display: none; }
+}
+
 /* ── MOBILE RESPONSIVE ── */
 @media (max-width: 768px) {
   .shell { flex-direction: column; height: auto; overflow: visible; }
@@ -428,14 +451,15 @@ body { font-family: "Segoe UI", Arial, sans-serif; background: var(--bg); color:
       <button class="btn btn-gold" id="btn-free">＋ Línea libre</button>
       <button class="btn btn-red" id="btn-clear">🗑 Limpiar</button>
       <div style="flex:1"></div>
-      <button class="btn btn-outline" id="btn-print">🖨 Imprimir / PDF</button>
+      <button class="btn btn-outline" id="btn-toggle-prices" title="Mostrar u ocultar valores individuales">👁 Valores: <strong id="toggle-label">Visibles</strong></button>
+      <button class="btn btn-green" id="btn-print">🖨 Imprimir / PDF</button>
     </div>
 
     <div class="q-table">
       <div class="q-thead">
         <div>Código</div>
         <div>Descripción</div>
-        <div style="text-align:center">Cant.</div>
+        <div class="th-qty" style="text-align:center">Cant.</div>
         <div class="th-r">Valor s/IVA</div>
         <div></div>
       </div>
@@ -768,6 +792,15 @@ document.querySelectorAll(".lista-tab").forEach(tab => {
 });
 
 // ===================== ACTION BUTTONS =====================
+// ── PRICES TOGGLE ──
+let pricesVisible = true;
+document.getElementById("btn-toggle-prices").addEventListener("click", function() {
+  pricesVisible = !pricesVisible;
+  document.body.classList.toggle("hide-prices", !pricesVisible);
+  document.getElementById("toggle-label").textContent = pricesVisible ? "Visibles" : "Ocultos";
+  this.style.opacity = pricesVisible ? "1" : "0.7";
+});
+
 document.getElementById("btn-section").addEventListener("click", addSectionRow);
 document.getElementById("btn-free").addEventListener("click", addFreeRow);
 document.getElementById("btn-clear").addEventListener("click", clearAll);
