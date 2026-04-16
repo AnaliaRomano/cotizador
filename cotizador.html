@@ -334,10 +334,7 @@ body.hide-prices .q-thead .th-r { display: none; }
   body.hide-prices .q-thead .th-qty,
   body.hide-prices .q-thead .th-r { display: none !important; }
   /* Also hide totals block when no prices shown */
-  /* In hide-prices mode: still show total amount but hide iva detail */
-  body.hide-prices .q-total .qt-iva { display: none; }
-  body.hide-prices .q-total .qt-final { display: none; }
-  /* Keep qt-base (total sin IVA) visible but relabel it via CSS content trick — handled in JS */
+  /* Total block always fully visible even when individual prices are hidden */
 }
 
 /* ── MOBILE RESPONSIVE ── */
@@ -823,18 +820,7 @@ document.getElementById("btn-toggle-prices").addEventListener("click", function(
   document.body.classList.toggle("hide-prices", !pricesVisible);
   document.getElementById("toggle-label").textContent = pricesVisible ? "Visibles" : "Ocultos";
   this.style.opacity = pricesVisible ? "1" : "0.7";
-  // Update total label to show "TOTAL" instead of "$ xxx" when prices hidden
-  const baseEl = document.getElementById("total-base");
-  if (!pricesVisible) {
-    baseEl.dataset.savedText = baseEl.textContent;
-    baseEl.textContent = "— Valores reservados —";
-    baseEl.style.fontSize = "14px";
-    baseEl.style.color = "var(--text2)";
-  } else {
-    if (baseEl.dataset.savedText) baseEl.textContent = baseEl.dataset.savedText;
-    baseEl.style.fontSize = "";
-    baseEl.style.color = "";
-  }
+  // Total block always visible — only individual prices hidden
 });
 
 document.getElementById("btn-section").addEventListener("click", addSectionRow);
